@@ -9,30 +9,30 @@ const LibrarySongs = ({
   isPlaying,
   setSongs,
 }) => {
-  const updateSongs = () => {
-    setSongs(
-      songs.map((targetSong) => {
-        return { ...targetSong, active: targetSong.id === id };
-      })
-    );
-  };
+  const songSelectHandler = async () => {
+    const selectedSong = songs.filter((state) => state.id === id);
+    await setCurrentSong({ ...selectedSong[0] });
 
-  const songSelectHandler = () => {
-    setCurrentSong(song);
-    if (isPlaying) {
-      const playPromise = audioRef.current.play();
-      if (playPromise !== undefined) {
-        playPromise.then((audio) => {
-          audioRef.current.play();
-        });
+    const newSongs = songs.map((song) => {
+      if (song.id === id) {
+        return {
+          ...song,
+          active: true,
+        };
+      } else {
+        return {
+          ...song,
+          active: false,
+        };
       }
-    }
+    });
+    setSongs(newSongs);
+    isPlaying && audioRef.current.play();
   };
   return (
     <div
       onClick={() => {
         songSelectHandler();
-        updateSongs();
       }}
       className={`library-song ${song.active ? 'selected' : ''}`}
     >
