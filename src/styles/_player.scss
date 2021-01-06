@@ -70,6 +70,65 @@ input[type="range"]::-moz-slider-thumb {
     border: none;
 }
 
+.cont {
+    position: absolute;
+    right: 15%;
+    bottom: 5%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    transform: translate(120%, -1.4rem);
+    width: 2.4rem;
+    height: 7.5rem;
+
+    input {
+        -webkit-appearance: none;
+        background: #fafa;
+        width: 100%;
+        height: 100%;
+        padding: 0.1rem 0.2rem;
+        cursor: grabbing;
+    }
+
+    input:focus {
+        cursor: grabbing;
+    }
+}
+
+.audioSVG {
+    margin: 0 0.7rem;
+    cursor: pointer;
+    order: 2;
+}
+
+.track2 {
+    overflow: hidden;
+    border-radius: 10rem;
+    background: #3aac77;
+    height: 1.6rem;
+    transform: rotate(-90deg) translate(50%, 0);
+    width: 7rem;
+    transition: 0.2s ease;
+
+    input {
+        background: transparent;
+        opacity: 0;
+    }
+}
+
+.passedVolume {
+    z-index: 10;
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 100%;
+    pointer-events: none;
+    transform: translateX(0%);
+    background: #000000;
+}
+
 @media screen and (max-width: 768px) {
     .time-control {
         width: 90%;
@@ -77,5 +136,15 @@ input[type="range"]::-moz-slider-thumb {
 
     .play-control {
         width: 60%;
+    }
+
+    .cont {
+            right: 40px;
+            bottom: 3%;
+            input {
+                width: 50%;
+                height: 50%;
+                        padding: 2px;
+            }
     }
 }

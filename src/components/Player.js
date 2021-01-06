@@ -1,10 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faPlay,
   faAngleLeft,
   faAngleRight,
   faPause,
+  faInfinity,
+  faVolumeDown,
+  faVolumeUp,
+  faVolumeMute,
 } from '@fortawesome/free-solid-svg-icons';
 
 const Player = ({
@@ -17,8 +21,12 @@ const Player = ({
   songs,
   setCurrentSong,
   setSongs,
+  volume,
+  setVolume,
+  setSongVolume,
 }) => {
-  //UseEffect Update List
+  const [activeVolume, setActiveVolume] = useState(false);
+
   const activeLibraryHandler = (nextPrev) => {
     const newSongs = songs.map((song) => {
       if (song.id === nextPrev.id) {
@@ -81,9 +89,69 @@ const Player = ({
     transform: `translateX(${songInfo.animationPercentage}%)`,
   };
 
+  const changeVolumeHandler = (e) => {
+    const value = e.target.value / 100;
+    localStorage.setItem('volume', value);
+    setVolume(value);
+    audioRef.current.volume = volume;
+    if (value === 0) audioRef.current.volume = 0;
+  };
+
+  const volumeIcon = () => {
+    if (volume >= 0.5) {
+      return faVolumeUp;
+    } else if (volume === 0) {
+      return faVolumeMute;
+    } else if (volume <= 0.5) {
+      return faVolumeDown;
+    }
+  };
+
+  const muteVolume = () => {
+    if (volume === 0) {
+      setVolume(JSON.parse(localStorage.getItem('volume')));
+      audioRef.current.volume = JSON.parse(localStorage.getItem('volume'));
+      return;
+    }
+    setVolume(0);
+    audioRef.current.volume = 0;
+  };
+
   return (
     <div className='player-container'>
       <div className='time-control'>
+        <div
+          className='cont'
+          onMouseOver={() => {
+            setActiveVolume(true);
+          }}
+          onMouseLeave={() => setActiveVolume(false)}
+        >
+          <FontAwesomeIcon
+            onClick={muteVolume}
+            size='2x'
+            icon={volumeIcon()}
+            className='audioSVG'
+          />
+          <div
+            className='track2'
+            style={{
+              opacity: `${activeVolume ? '1' : '0'}`,
+              pointerEvents: `${activeVolume ? 'all' : 'none'}`,
+            }}
+          >
+            <input
+              type='range'
+              max='100'
+              min='0'
+              onChange={changeVolumeHandler}
+            />
+            <div
+              className='passedVolume'
+              style={{ transform: `translateX(${volume * 100})` }}
+            ></div>
+          </div>
+        </div>
         <p>{getTime(songInfo.currentTime)}</p>
         <div
           style={{

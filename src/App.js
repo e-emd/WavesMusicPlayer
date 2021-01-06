@@ -11,6 +11,7 @@ function App() {
   const [songs, setSongs] = useState(data());
   const [currentSong, setCurrentSong] = useState(songs[0]);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [volume, setVolume] = useState(false);
   const [songInfo, setSongInfo] = useState({
     currentTime: 0,
     duration: 0,
@@ -18,6 +19,13 @@ function App() {
   });
 
   const audioRef = useRef(null);
+
+  const volumeStorage = () =>
+    localStorage.getItem('volume') ? localStorage.getItem('volume') : 1;
+
+  const setSongVolume = () => {
+    audioRef.current.volume = volumeStorage();
+  };
 
   const timeUpdateHandler = (e) => {
     const current = e.target.currentTime;
@@ -44,6 +52,9 @@ function App() {
       <Nav libraryStatus={libraryStatus} setLibraryStatus={setLibraryStatus} />
       <Song currentSong={currentSong} />
       <Player
+        volume={volume}
+        setVolume={setVolume}
+        setSongVolume={setSongVolume}
         audioRef={audioRef}
         isPlaying={isPlaying}
         setIsPlaying={setIsPlaying}
